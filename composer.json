@@ -1,0 +1,17 @@
+{
+  "name": "offbeatwp/re-smush",
+  "description": "Makes images so much smaller",
+  "license": "MIT",
+  "type": "offbeatwp-service",
+  "authors": [
+    {
+      "name": "Daan Seegers",
+      "email": "daan@raow.nl"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "OffbeatWP\\ReSmush\\": "src"
+    }
+  }
+}
