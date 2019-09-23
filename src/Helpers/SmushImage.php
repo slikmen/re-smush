@@ -5,12 +5,41 @@ namespace OffbeatWP\ReSmush\Helpers;
 class SmushImage
 {
 
-
     public function __construct($image)
     {
         $this->image = $image;
         $this->quality = 90;
         $this->url = 'http://api.resmush.it/?qlty=';
+    }
+
+    public function execute()
+    {
+        $file = $this->image['file'];
+
+       if( $this->isAllowed($this->image['type']) == true){
+        $this->pullImage($this->makeCurlRequest($file), $file);
+       }
+    }
+
+    public function isAllowed($image)
+    {
+        switch ($image) {
+            case "image/jpeg":
+                return true;
+                break;
+            case "image/png":
+                return true;
+                break;
+            case "image/gif":
+                return true;
+                break;
+            case "image/gif":
+                return true;
+                break;
+            default:
+                return false;
+                break;
+        }
     }
 
     public function setUrl($url)
@@ -23,18 +52,10 @@ class SmushImage
         $this->quality = $quality;
     }
 
-    public function execute()
-    {
-        $file = $this->image['file'];
-        $this->pullImage($this->makeCurlRequest($file), $file);
-
-        return $this->image;
-    }
-
     public function pullImage($result, $file)
     {
         $content = file_get_contents($result->dest);
-        error_log($result->dest);
+        error_log($this->image['type']);
         file_put_contents($file, $content);
     }
 
@@ -64,4 +85,5 @@ class SmushImage
 
         return json_decode($result);
     }
+
 }
