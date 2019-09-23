@@ -107,52 +107,52 @@ class SmushImage
 
         switch ($checkError->error) {
             case 301:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             case 400:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             case 402:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             case 403:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             case 404:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             case 501:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             case 502:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             case 503:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             case 504:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return false;
                 break;
             default:
-                error_log('error Log:' . $checkError->error);
+                error_log('error Log:' . $checkError->error_long);
 
                 return true;
                 break;
