@@ -15,8 +15,12 @@ class SmushImage
     public function execute()
     {
         if ($this->hasAllowedType($this->image['type']) == true && $this->hasAllowedSize($this->image['file']) == true) {
-            error_log($this->makeCurlRequest($this->image['file']));
             $request = $this->makeCurlRequest($this->image['file']);
+
+            foreach ($request as $key => $data) {
+                error_log($key . ":" . $data);
+            }
+
             if ($request != false) {
                 $this->pullImage($request, $this->image['file']);
             }
@@ -94,7 +98,68 @@ class SmushImage
 
         curl_close($ch);
 
+        if ($this->getCurlStatus($result) != true) {
+            return false;
+        }
+
         return json_decode($result);
+    }
+
+    public function getCurlStatus($result)
+    {
+        $checkError = json_decode($result);
+
+        switch ($checkError->error) {
+            case 301:
+                error_log('error Log:' . $checkError->error);
+                return false;
+                break;
+            case 400:
+                error_log('error Log:' . $checkError->error);
+
+                return false;
+                break;
+            case 402:
+                error_log('error Log:' . $checkError->error);
+
+                return false;
+                break;
+            case 403:
+                error_log('error Log:' . $checkError->error);
+
+                return false;
+                break;
+            case 404:
+                error_log('error Log:' . $checkError->error);
+
+                return false;
+                break;
+            case 501:
+                error_log('error Log:' . $checkError->error);
+
+                return false;
+                break;
+            case 502:
+                error_log('error Log:' . $checkError->error);
+
+                return false;
+                break;
+            case 503:
+                error_log('error Log:' . $checkError->error);
+
+                return false;
+                break;
+            case 504:
+                error_log('error Log:' . $checkError->error);
+
+                return false;
+                break;
+            default:
+                error_log('error Log:' . $checkError->error);
+
+                return true;
+                break;
+        }
     }
 
 }
