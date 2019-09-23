@@ -14,4 +14,3 @@ Then you need to add the social importer as service. You can do this by adding t
 OffbeatWP\ReSmush\Service::class,
 ```
 
-## This one is in beta, you cannot use it yet
