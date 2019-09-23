@@ -8,7 +8,7 @@ class SmushImage
     public function __construct($image)
     {
         $this->image = $image;
-        $this->quality = 1;
+        $this->quality = 90;
         $this->url = 'http://api.resmush.it/?qlty=';
     }
 
@@ -16,10 +16,6 @@ class SmushImage
     {
         if ($this->hasAllowedType($this->image['type']) == true && $this->hasAllowedSize($this->image['file']) == true) {
             $request = $this->makeCurlRequest($this->image['file']);
-
-            foreach ($request as $key => $data) {
-                error_log($key . ":" . $data);
-            }
 
             if ($request != false) {
                 $this->pullImage($request, $this->image['file']);
@@ -112,6 +108,7 @@ class SmushImage
         switch ($checkError->error) {
             case 301:
                 error_log('error Log:' . $checkError->error);
+
                 return false;
                 break;
             case 400:
