@@ -2,6 +2,8 @@
 
 namespace OffbeatWP\ReSmush\Helpers;
 
+use \Exception;
+
 class SmushImage
 {
 
@@ -104,7 +106,11 @@ class SmushImage
 
         curl_close($ch);
 
-        if ($this->hasNoCurlError($result) != true) {
+        try {
+            $this->hasNoCurlError($result);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+
             return false;
         }
 
@@ -117,49 +123,41 @@ class SmushImage
 
         switch ($checkError->error) {
             case 301:
-                error_log('error Log:' . $checkError->error_long);
 
-                return false;
+                throw new Exception('error Log:' . $checkError->error_long);
+
                 break;
             case 400:
-                error_log('error Log:' . $checkError->error_long);
+                throw new Exception('error Log:' . $checkError->error_long);
 
-                return false;
                 break;
             case 402:
-                error_log('error Log:' . $checkError->error_long);
+                throw new Exception('error Log:' . $checkError->error_long);
 
-                return false;
                 break;
             case 403:
-                error_log('error Log:' . $checkError->error_long);
+                throw new Exception('error Log:' . $checkError->error_long);
 
-                return false;
                 break;
             case 404:
-                error_log('error Log:' . $checkError->error_long);
+                throw new Exception('error Log:' . $checkError->error_long);
 
-                return false;
                 break;
             case 501:
-                error_log('error Log:' . $checkError->error_long);
+                throw new Exception('error Log:' . $checkError->error_long);
 
-                return false;
                 break;
             case 502:
-                error_log('error Log:' . $checkError->error_long);
+                throw new Exception('error Log:' . $checkError->error_long);
 
-                return false;
                 break;
             case 503:
-                error_log('error Log:' . $checkError->error_long);
+                throw new Exception('error Log:' . $checkError->error_long);
 
-                return false;
                 break;
             case 504:
-                error_log('error Log:' . $checkError->error_long);
+                throw new Exception('error Log:' . $checkError->error_long);
 
-                return false;
                 break;
             default:
 
