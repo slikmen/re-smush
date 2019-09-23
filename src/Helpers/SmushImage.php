@@ -152,7 +152,6 @@ class SmushImage
                 return false;
                 break;
             default:
-                error_log('error Log:' . $checkError->error_long);
 
                 return true;
                 break;
