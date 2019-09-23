@@ -94,14 +94,14 @@ class SmushImage
 
         curl_close($ch);
 
-        if ($this->getCurlStatus($result) != true) {
+        if ($this->hasNoCurlError($result) != true) {
             return false;
         }
 
         return json_decode($result);
     }
 
-    public function getCurlStatus($result)
+    public function hasNoCurlError($result)
     {
         $checkError = json_decode($result);
 
