@@ -8,14 +8,18 @@ class SmushImage
     public function __construct($image)
     {
         $this->image = $image;
-        $this->quality = 90;
+        $this->quality = 1;
         $this->url = 'http://api.resmush.it/?qlty=';
     }
 
     public function execute()
     {
         if ($this->hasAllowedType($this->image['type']) == true && $this->hasAllowedSize($this->image['file']) == true) {
-            $this->pullImage($this->makeCurlRequest($this->image['file']), $this->image['file']);
+            error_log($this->makeCurlRequest($this->image['file']));
+            $request = $this->makeCurlRequest($this->image['file']);
+            if ($request != false) {
+                $this->pullImage($request, $this->image['file']);
+            }
         }
     }
 
@@ -42,6 +46,7 @@ class SmushImage
         if (filesize($image) < 5242880) {
             return true;
         }
+
         return false;
     }
 
@@ -58,7 +63,6 @@ class SmushImage
     public function pullImage($result, $file)
     {
         $content = file_get_contents($result->dest);
-        error_log($this->image['type']);
         file_put_contents($file, $content);
     }
 
@@ -68,6 +72,7 @@ class SmushImage
         $info = pathinfo($file);
         $name = $info['basename'];
         $output = new \CURLFile($file, $mime, $name);
+
         $data = [
             "files" => $output,
         ];
@@ -80,8 +85,11 @@ class SmushImage
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
         $result = curl_exec($ch);
+
         if (curl_errno($ch)) {
-            $result = curl_error($ch);
+            error_log(curl_error($ch));
+
+            return false;
         }
 
         curl_close($ch);
