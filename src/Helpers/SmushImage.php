@@ -14,14 +14,12 @@ class SmushImage
 
     public function execute()
     {
-        $file = $this->image['file'];
-
-       if( $this->isAllowed($this->image['type']) == true){
-        $this->pullImage($this->makeCurlRequest($file), $file);
-       }
+        if ($this->hasAllowedType($this->image['type']) == true && $this->hasAllowedSize($this->image['file']) == true) {
+            $this->pullImage($this->makeCurlRequest($this->image['file']), $this->image['file']);
+        }
     }
 
-    public function isAllowed($image)
+    public function hasAllowedType($image)
     {
         switch ($image) {
             case "image/jpeg":
@@ -40,6 +38,14 @@ class SmushImage
                 return false;
                 break;
         }
+    }
+
+    public function hasAllowedSize($image)
+    {
+        if (filesize($image) < 5242880) {
+            return true;
+        }
+        return false;
     }
 
     public function setUrl($url)
