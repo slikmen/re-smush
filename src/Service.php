@@ -10,7 +10,7 @@ class Service extends AbstractService
 
     public function register()
     {
-        add_filter('wp_handle_upload', [$this, 'SmushImages'], 10, 2);
+        add_filter('wp_handle_upload', [$this, 'SmushImage'], 10, 2);
     }
 
     public function smushImage($image)
