@@ -121,49 +121,49 @@ class SmushImage
     {
         $checkError = json_decode($result);
 
-        switch ($checkError->error) {
-            case 301:
+        if (isset($checkError->error)) {
+            switch ($checkError->error) {
+                case 301:
 
-                throw new Exception('error Log:' . $checkError->error_long);
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            case 400:
-                throw new Exception('error Log:' . $checkError->error_long);
+                    break;
+                case 400:
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            case 402:
-                throw new Exception('error Log:' . $checkError->error_long);
+                    break;
+                case 402:
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            case 403:
-                throw new Exception('error Log:' . $checkError->error_long);
+                    break;
+                case 403:
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            case 404:
-                throw new Exception('error Log:' . $checkError->error_long);
+                    break;
+                case 404:
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            case 501:
-                throw new Exception('error Log:' . $checkError->error_long);
+                    break;
+                case 501:
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            case 502:
-                throw new Exception('error Log:' . $checkError->error_long);
+                    break;
+                case 502:
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            case 503:
-                throw new Exception('error Log:' . $checkError->error_long);
+                    break;
+                case 503:
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            case 504:
-                throw new Exception('error Log:' . $checkError->error_long);
+                    break;
+                case 504:
+                    throw new Exception('error Log:' . $checkError->error_long);
 
-                break;
-            default:
-
-                return true;
-                break;
+                    break;
+            }
         }
+
+        return true;
     }
 
 }
