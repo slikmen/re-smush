@@ -10,6 +10,7 @@ class SmushImage
         $this->image = $image;
         $this->quality = 90;
         $this->url = 'http://api.resmush.it/?qlty=';
+        $this->exif = 'true';
     }
 
     public function execute()
@@ -20,6 +21,15 @@ class SmushImage
             if ($request != false) {
                 $this->pullImage($request, $this->image['file']);
             }
+        }
+    }
+
+    public function setExif($exif)
+    {
+        if ($exif == true) {
+            $this->exif = 'true';
+        } else {
+            $this->exif = 'false';
         }
     }
 
@@ -78,7 +88,7 @@ class SmushImage
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url . $this->quality);
+        curl_setopt($ch, CURLOPT_URL, $this->url . $this->quality . '&exif=' . $this->exif);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
