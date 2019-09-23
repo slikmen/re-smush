@@ -5,9 +5,12 @@ namespace OffbeatWP\ReSmush\Helpers;
 class SmushImage
 {
 
+
     public function __construct($image)
     {
         $this->image = $image;
+        $this->quality = 90;
+        $this->url = 'http://api.resmush.it/?qlty=';
     }
 
     public function setUrl($url)
@@ -23,6 +26,20 @@ class SmushImage
     public function execute()
     {
         $file = $this->image['file'];
+        $this->pullImage($this->makeCurlRequest($file), $file);
+
+        return $this->image;
+    }
+
+    public function pullImage($result, $file)
+    {
+        $content = file_get_contents($result->dest);
+        error_log($result->dest);
+        file_put_contents($file, $content);
+    }
+
+    public function makeCurlRequest($file)
+    {
         $mime = mime_content_type($file);
         $info = pathinfo($file);
         $name = $info['basename'];
@@ -32,7 +49,7 @@ class SmushImage
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://api.resmush.it/?qlty=90');
+        curl_setopt($ch, CURLOPT_URL, $this->url . $this->quality);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -42,19 +59,9 @@ class SmushImage
         if (curl_errno($ch)) {
             $result = curl_error($ch);
         }
+
         curl_close($ch);
 
-        $result = json_decode($result);
-
-        $this->pullImage($result, $file);
-
-        return $this->image;
-    }
-
-    public function pullImage($result, $file)
-    {
-        $content = file_get_contents($result->dest);
-//        error_log($content);
-        file_put_contents($file, $content);
+        return json_decode($result);
     }
 }
