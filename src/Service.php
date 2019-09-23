@@ -10,13 +10,13 @@ class Service extends AbstractService
 
     public function register()
     {
-        add_filter('wp_handle_upload', [$this, 'handleImage'], 10, 2);
+        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
     }
 
-    public function handleImage($image)
+    public function handleUpload($image)
     {
-        $Api = new SmushImage($image);
-        $Api->execute();
+        $apiCall = new SmushImage($image);
+        $apiCall->execute();
 
         return $image;
     }

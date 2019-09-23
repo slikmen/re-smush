@@ -31,9 +31,6 @@ class SmushImage
             case "image/gif":
                 return true;
                 break;
-            case "image/gif":
-                return true;
-                break;
             default:
                 return false;
                 break;
