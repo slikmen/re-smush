@@ -7,9 +7,10 @@ use \Exception;
 class SmushImage
 {
 
-    public function __construct($image)
+    public function __construct($imageType, $imageFile)
     {
-        $this->image = $image;
+        $this->image->type = $imageType;
+        $this->image->file = $imageFile;
         $this->quality = 90;
         $this->url = 'http://api.resmush.it/?qlty=';
         $this->exif = 'true';
@@ -17,11 +18,12 @@ class SmushImage
 
     public function execute()
     {
-        if ($this->hasAllowedType($this->image['type']) == true && $this->hasAllowedSize($this->image['file']) == true) {
-            $request = $this->makeCurlRequest($this->image['file']);
+
+        if ($this->hasAllowedType($this->image->type) == true && $this->hasAllowedSize($this->image->file) == true) {
+            $request = $this->makeCurlRequest($this->image->file);
 
             if ($request != false) {
-                $this->pullImage($request, $this->image['file']);
+                $this->pullImage($request, $this->image->file);
             }
         }
     }
@@ -74,6 +76,7 @@ class SmushImage
 
     public function pullImage($result, $file)
     {
+
         $content = file_get_contents($result->dest);
         file_put_contents($file, $content);
     }
