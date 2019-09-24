@@ -13,7 +13,7 @@ class Service extends AbstractService
 //        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
         add_filter('wp_generate_attachment_metadata', [$this, 'handleThumbnails'], 10, 2);
 
-        $this->defaultQuality = 1;
+        $this->defaultQuality = 90;
     }
 
     public function handleUpload($image)
