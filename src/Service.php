@@ -13,7 +13,7 @@ class Service extends AbstractService
 //        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
         add_filter('wp_generate_attachment_metadata', [$this, 'handleThumbnails'], 10, 2);
 
-        $this->defaultQuality = 90;
+        $this->defaultQuality = 1;
     }
 
     public function handleUpload($image)
@@ -27,11 +27,20 @@ class Service extends AbstractService
 
     public function handleThumbnails($image, $key)
     {
-        $apiCall = new SmushImage(get_post_mime_type($key), $this->getFile($image, $size = 'thumbnail'));
-        $apiCall->quality = $this->defaultQuality;
-        $apiCall->execute();
+
+        $this->smushDemention($image, $key, 'thumbnail');
+        $this->smushDemention($image, $key, 'medium_large');
+        $this->smushDemention($image, $key, 'medium');
+        $this->smushDemention($image, $key, 'large');
 
         return $image;
+    }
+
+    public function smushDemention($image, $key, $size)
+    {
+        $apiCall = new SmushImage(get_post_mime_type($key), $this->getFile($image, $size));
+        $apiCall->quality = $this->defaultQuality;
+        $apiCall->execute();
     }
 
     public function getBasePath($image)
