@@ -4,14 +4,25 @@ namespace OffbeatWP\ReSmush;
 
 use OffbeatWP\Services\AbstractService;
 use OffbeatWP\ReSmush\Helpers\SmushImage;
+use OffbeatWP\Contracts\SiteSettings;
 
 class Service extends AbstractService
 {
 
-    public function register()
+    protected $settings;
+
+    public function register(SiteSettings $settings)
     {
+// --------------------- WP Filters ---------------------
+
 //        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
         add_filter('wp_generate_attachment_metadata', [$this, 'handleThumbnails'], 10, 2);
+
+// --------------------- Add settings page ---------------------
+
+        $settings->addPage(AddSeoFields::class);
+
+// --------------------- Set default quality ---------------------
 
         $this->defaultQuality = 92;
     }
@@ -27,7 +38,6 @@ class Service extends AbstractService
 
     public function handleThumbnails($image, $key)
     {
-
         $this->smushDemention($image, $key, 'thumbnail');
         $this->smushDemention($image, $key, 'medium_large');
         $this->smushDemention($image, $key, 'medium');
