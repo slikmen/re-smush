@@ -13,7 +13,7 @@ class SmushImage
         $this->image->file = $imageFile;
         $this->quality = 90;
         $this->url = 'http://api.resmush.it/?qlty=';
-        $this->exif = 'true';
+        $this->exif = true;
     }
 
     public function execute()
