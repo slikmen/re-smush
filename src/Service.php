@@ -16,6 +16,7 @@ class Service extends AbstractService
         $settings->addPage(AddSettings::class);
 
         add_action('init', [$this, 'init']);
+
     }
 
     public function init()
@@ -41,6 +42,12 @@ class Service extends AbstractService
 
     public function handleUpload($image)
     {
+        $sizes = getimagesize($image['file']);
+
+        $sizes[0] = $sizes[0] - 1;
+
+        add_image_size('optimized-image', $sizes[0]);
+
         return $image;
     }
 
@@ -50,6 +57,7 @@ class Service extends AbstractService
         $this->smushDemention($image, $key, 'medium_large');
         $this->smushDemention($image, $key, 'medium');
         $this->smushDemention($image, $key, 'hero');
+        $this->smushDemention($image, $key, 'optimized-image');
 
         return $image;
     }
