@@ -48,7 +48,7 @@ class Service extends AbstractService
         $this->smushDemention($image, $key, 'thumbnail');
         $this->smushDemention($image, $key, 'medium_large');
         $this->smushDemention($image, $key, 'medium');
-        $this->smushDemention($image, $key, 'large');
+        $this->smushDemention($image, $key, 'hero');
 
         return $image;
     }
