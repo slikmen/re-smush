@@ -13,24 +13,36 @@ class Service extends AbstractService
 
     public function register(SiteSettings $settings)
     {
-// --------------------- WP Filters ---------------------
+        // --------------------- Add settings page ---------------------
 
-//        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
+        $settings->addPage(AddSettings::class);
+
+        // --------------------- WP Filters ---------------------
+
+        //        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
+
+        if(setting('re_smush_enabled_thumbnails') == true){
+
         add_filter('wp_generate_attachment_metadata', [$this, 'handleThumbnails'], 10, 2);
 
-// --------------------- Add settings page ---------------------
+        }
 
-        $settings->addPage(AddSeoFields::class);
+        // --------------------- Set default quality ---------------------
 
-// --------------------- Set default quality ---------------------
+        if (setting('re_smush_image_quality') != null && setting('re_smush_image_quality') != '') {
+            $this->defaultQuality = setting('re_smush_image_quality');
+        } else {
+            $this->defaultQuality = 90;
+        }
 
-        $this->defaultQuality = 92;
     }
 
     public function handleUpload($image)
     {
+
+
         $apiCall = new SmushImage($image['type'], $image['file']);
-        $apiCall->quality = $this->defaultQuality;
+        $apiCall->setQuality($this->defaultQuality);
         $apiCall->execute();
 
         return $image;
@@ -46,19 +58,19 @@ class Service extends AbstractService
         return $image;
     }
 
-    public function smushDemention($image, $key, $size)
+    protected function smushDemention($image, $key, $size)
     {
         $apiCall = new SmushImage(get_post_mime_type($key), $this->getFile($image, $size));
-        $apiCall->quality = $this->defaultQuality;
+        $apiCall->setQuality($this->defaultQuality);
         $apiCall->execute();
     }
 
-    public function getBasePath($image)
+    protected function getBasePath($image)
     {
         return substr($image["file"], 0, strrpos($image["file"], '/'));
     }
 
-    public function getFile($image, $size = 'thumbnail')
+    protected function getFile($image, $size = 'thumbnail')
     {
         return wp_upload_dir()['basedir'] . '/' . $this->getBasePath($image) . '/' . $image["sizes"][$size]["file"];
     }

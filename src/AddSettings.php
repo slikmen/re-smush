@@ -11,14 +11,22 @@ class AddSettings
 
     public function title()
     {
-        return __('Re smush', 'raow');
+        return __('OffbeatWP image optimiser', 'raow');
     }
 
     public function form()
     {
         $form = new \OffbeatWP\Form\Form();
-        $form->addTab('localseo_company_general-information', 'OffbeatWP Image optimiser');
-        $form->addField(\OffbeatWP\Form\Fields\Text::make('re_smush_image_quality', 'Image Quality'));
+        $form->addTab('re_smush_tab', 'OffbeatWP Image optimiser');
+
+        $imageQualities = \OffbeatWP\Form\Fields\Select::make('re_smush_image_quality', 'Image Quality');
+
+        $imageQualities->addOptions(\OffbeatWP\ReSmush\Data\General::imageQualities());
+
+        $reSmushEnabled = \OffbeatWP\Form\Fields\TrueFalse::make('re_smush_enabled_thumbnails', 'Optimise thumbnails');
+
+        $form->addField($reSmushEnabled);
+        $form->addField($imageQualities);
 
         return $form;
     }
