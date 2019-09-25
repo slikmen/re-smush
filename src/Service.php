@@ -13,13 +13,18 @@ class Service extends AbstractService
 
     public function register(SiteSettings $settings)
     {
-        // --------------------- Add settings page ---------------------
-
         $settings->addPage(AddSettings::class);
+
+        add_action('init', [$this, 'init']);
+    }
+
+    public function init()
+    {
+        // --------------------- Add settings page ---------------------
 
         // --------------------- WP Filters ---------------------
 
-        //        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
+        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
 
         if (setting('re_smush_enabled_thumbnails') == true) {
             add_filter('wp_generate_attachment_metadata', [$this, 'handleThumbnails'], 10, 2);
@@ -36,10 +41,6 @@ class Service extends AbstractService
 
     public function handleUpload($image)
     {
-        $apiCall = new SmushImage($image['type'], $image['file']);
-        $apiCall->setQuality($this->defaultQuality);
-        $apiCall->execute();
-
         return $image;
     }
 
