@@ -21,10 +21,8 @@ class Service extends AbstractService
 
         //        add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
 
-        if(setting('re_smush_enabled_thumbnails') == true){
-
-        add_filter('wp_generate_attachment_metadata', [$this, 'handleThumbnails'], 10, 2);
-
+        if (setting('re_smush_enabled_thumbnails') == true) {
+            add_filter('wp_generate_attachment_metadata', [$this, 'handleThumbnails'], 10, 2);
         }
 
         // --------------------- Set default quality ---------------------
@@ -34,13 +32,10 @@ class Service extends AbstractService
         } else {
             $this->defaultQuality = 90;
         }
-
     }
 
     public function handleUpload($image)
     {
-
-
         $apiCall = new SmushImage($image['type'], $image['file']);
         $apiCall->setQuality($this->defaultQuality);
         $apiCall->execute();
