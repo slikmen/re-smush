@@ -17,7 +17,7 @@ class SmushImage
 
     public function execute()
     {
-        if ($this->hasAllowedType($this->image->type) == true && $this->hasAllowedSize($this->image->file) == true) {
+        if (General::hasAllowedType($this->image->type) == true && General::hasAllowedSize($this->image->file) == true) {
             $request = $this->makeCurlRequest($this->image->file);
 
             if ($request != false) {
@@ -35,32 +35,6 @@ class SmushImage
         }
     }
 
-    public function hasAllowedType($image)
-    {
-        switch ($image) {
-            case "image/jpeg":
-                return true;
-                break;
-            case "image/png":
-                return true;
-                break;
-            case "image/gif":
-                return true;
-                break;
-            default:
-                return false;
-                break;
-        }
-    }
-
-    public function hasAllowedSize($image)
-    {
-        if (filesize($image) < 5242880) {
-            return true;
-        }
-
-        return false;
-    }
 
     public function setUrl($url)
     {

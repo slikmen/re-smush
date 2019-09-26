@@ -2,6 +2,7 @@
 
 namespace OffbeatWP\ReSmush;
 
+use OffbeatWP\ReSmush\Helpers\General;
 use OffbeatWP\Services\AbstractService;
 use OffbeatWP\ReSmush\Helpers\SmushImage;
 use OffbeatWP\Contracts\SiteSettings;
@@ -16,7 +17,6 @@ class Service extends AbstractService
         $settings->addPage(AddSettings::class);
 
         add_action('init', [$this, 'init']);
-
     }
 
     public function init()
@@ -24,6 +24,7 @@ class Service extends AbstractService
         // --------------------- Add settings page ---------------------
 
         // --------------------- WP Filters ---------------------
+        add_filter('image_size_names_choose', [$this, 'addImageSize']);
 
         add_filter('wp_handle_upload', [$this, 'handleUpload'], 10, 2);
 
@@ -40,13 +41,29 @@ class Service extends AbstractService
         }
     }
 
+    public function addImageSize($sizes)
+    {
+        if (get_bloginfo("language") == 'nl') {
+            $name = 'Volledige grootte, geoptimaliseerd';
+        } else {
+            $name = 'Orginal Optimized';
+        }
+
+        return array_merge($sizes, [
+            'optimized-image' => __($name),
+        ]);
+    }
+
     public function handleUpload($image)
     {
-        $sizes = getimagesize($image['file']);
 
-        $sizes[0] = $sizes[0] - 1;
+        if (General::hasAllowedType($image['type']) == true && General::hasAllowedSize($image['file']) == true) {
+            $sizes = getimagesize($image['file']);
 
-        add_image_size('optimized-image', $sizes[0]);
+            $sizes[0] = $sizes[0] - 1;
+
+            add_image_size('optimized-image', $sizes[0]);
+        }
 
         return $image;
     }
@@ -56,6 +73,7 @@ class Service extends AbstractService
         $this->smushDemention($image, $key, 'thumbnail');
         $this->smushDemention($image, $key, 'medium_large');
         $this->smushDemention($image, $key, 'medium');
+        $this->smushDemention($image, $key, 'large');
         $this->smushDemention($image, $key, 'hero');
         $this->smushDemention($image, $key, 'optimized-image');
 
