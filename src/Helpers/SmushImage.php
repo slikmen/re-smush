@@ -13,6 +13,7 @@ class SmushImage
         $this->image->file = $imageFile;
         $this->url = 'http://api.resmush.it/?qlty=';
         $this->exif = true;
+        $this->client = new GuzzleHttp\Client();
     }
 
     public function execute()
@@ -57,88 +58,47 @@ class SmushImage
         $mime = mime_content_type($file);
         $info = pathinfo($file);
         $name = $info['basename'];
-        $output = new \CURLFile($file, $mime, $name);
+        // $output = new \CURLFile($file, $mime, $name);
 
-        $data = [
-            "files" => $output,
-        ];
+        // $data = [
+        //     "files" => $output,
+        // ];
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url . $this->quality . '&exif=' . $this->exif);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_URL, $this->url . $this->quality . '&exif=' . $this->exif);
+        // curl_setopt($ch, CURLOPT_POST, 1);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
-        $result = curl_exec($ch);
+        // $result = curl_exec($ch);
 
-        if (curl_errno($ch)) {
-            error_log(curl_error($ch));
+        // if (curl_errno($ch)) {
+        //     error_log(curl_error($ch));
 
-            return false;
-        }
+        //     return false;
+        // }
 
-        curl_close($ch);
+        // curl_close($ch);
 
-        try {
-            $this->hasNoCurlError($result);
-        } catch (Exception $e) {
-            error_log($e->getMessage());
+        // try {
+        //     $this->hasNoCurlError($result);
+        // } catch (Exception $e) {
+        //     error_log($e->getMessage());
 
+        //     return false;
+        // }
+        
+        $result = $this->client->request('GET', $this->url . $this->quality . '&exif=' . $this->exif);
+
+        if ($result->getStatusCode() != 200){
+            error_log('Api error:' . $result->getStatusCode());
             return false;
         }
 
         return json_decode($result);
     }
 
-    public function hasNoCurlError($result)
-    {
-        $checkError = json_decode($result);
-        $this->beforeLog = 'error Log: ';
-
-        if (isset($checkError->error)) {
-            switch ($checkError->error) {
-                case 301:
-
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-                case 400:
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-                case 402:
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-                case 403:
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-                case 404:
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-                case 501:
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-                case 502:
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-                case 503:
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-                case 504:
-                    throw new Exception($this->beforeLog . $checkError->error_long);
-
-                    break;
-            }
-        }
-
-        return true;
-    }
+    
 
 }
